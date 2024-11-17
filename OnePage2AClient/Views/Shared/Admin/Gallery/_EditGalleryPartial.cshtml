@@ -1,0 +1,33 @@
+﻿@model OnePage2AClient.Entity.Gallery
+
+<div class="modal-header">
+    <h5 class="modal-title" id="editGalleryModalLabel">Gallery Düzenle</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+</div>
+<div class="modal-body">
+    <form id="editGalleryForm" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+
+        <div class="mb-3">
+            <label for="ImageFile" class="form-label">Yeni Fotoğraf Yükle (İsteğe Bağlı)</label>
+            <input type="file" name="ImageFile" id="ImageFile" class="form-control" />
+        </div>
+
+        <div class="mb-3 text-center">
+            <label class="form-label">Mevcut Fotoğraf:</label><br />
+            @if (!string.IsNullOrEmpty(Model.ImgUrl))
+            {
+                <img src="@Model.ImgUrl" alt="Gallery Fotoğraf" class="img-fluid rounded" style="max-width: 50%;" />
+            }
+            else
+            {
+                <span>Fotoğraf Yok</span>
+            }
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="submit" form="editGalleryForm" class="btn btn-primary">Güncelle</button>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+</div>

@@ -1,0 +1,74 @@
+﻿@model OnePage2AClient.Models.LoginViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <title>Giriş Yap - 2A Baskı Malzemeleri</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <!-- Bootstrap CSS ve diğer gerekli CSS dosyaları -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Giriş Yap</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form asp-action="Login" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Kullanıcı Adı</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Şifre</label>
+                        <input asp-for="Password" class="form-control" type="password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label">Beni Hatırla</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+
+                </form>
+                <p class="text-center mt-3">
+                    <a href="@Url.Action("ForgotPassword", "Login")">Şifremi Unuttum</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- Login Form End -->
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/lib/wow/wow.min.js"></script>
+    <script src="~/assets/lib/easing/easing.min.js"></script>
+    <script src="~/assets/lib/waypoints/waypoints.min.js"></script>
+    <script src="~/assets/lib/counterup/counterup.min.js"></script>
+    <script src="~/assets/lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="~/assets/js/main.js"></script>
+
+    <!-- Validation Scripts -->
+    @section Scripts {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"
+                integrity="sha512-FOs6IWxWtZ/7S4WDFYnGdPrT8N9n1eFo3Kcd+L+47J7LZQ8tXW6s+1stcYltTzKfILsB9QvDkZkYjGw8y7L1BA=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"
+                integrity="sha512-TkTtcYVgr9hC8h2JG/dc2eE/e/DSyA7Y1e8O9QhEHZYgNRv+aZhPFmgWoxnBF0YtDvTI2nFB77/K0SNi4T6z2A=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    }
+</body>
+</html>

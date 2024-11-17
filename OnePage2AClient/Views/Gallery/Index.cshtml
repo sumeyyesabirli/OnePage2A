@@ -1,0 +1,178 @@
+﻿@model List<OnePage2AClient.Entity.Gallery>
+
+@{
+    Layout = "~/Views/Shared/Admin/_Layout.cshtml";
+    ViewBag.Title = "Gallery Panel";
+}
+
+<div class="container mt-5">
+    <h1 class="page-title">Galeri Listesi</h1>
+    <form action="@Url.Action("SetActiveGallery", "Gallery")" method="post">
+        @Html.AntiForgeryToken()
+        <table class="table table-striped admin-table">
+            <thead>
+                <tr>
+                    <th>Fotoğraf</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var gallery in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(gallery.ImgUrl))
+                            {
+                                <img src="@gallery.ImgUrl" alt="Fotoğraf Eksik" class="gallery-image" style="width:100px;" />
+                            }
+                            else
+                            {
+                                <span>Fotoğraf Yok</span>
+                            }
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-warning edit-gallery-btn" data-id="@gallery.Id">
+                                <i class="fas fa-edit"></i> Düzenle
+                            </button>
+                            <a href="@Url.Action("DeleteGallery", "Gallery", new { id = gallery.Id })" class="btn btn-danger">Sil</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+    <nav>
+        <ul class="pagination justify-content-center">
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", "Gallery", new { page = ViewBag.CurrentPage - 1 })">Önceki</a>
+                </li>
+            }
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", "Gallery", new { page = i })">@i</a>
+                </li>
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", "Gallery", new { page = ViewBag.CurrentPage + 1 })">Sonraki</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
+
+<!-- Add New Gallery -->
+<div class="container mt-5">
+    <h1 class="page-title">Yeni Galeri Oluştur</h1>
+    <form action="@Url.Action("AddGallery", "Gallery")" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
+        <!-- Upload Option Selection -->
+        <div class="mb-3">
+            <label class="form-label">Fotoğraf Ekleme Seçeneği</label>
+            <select id="uploadOption" class="form-select">
+                <option value="single">Tekli Fotoğraf Ekle</option>
+                <option value="multiple">Çoklu Fotoğraf Ekle</option>
+            </select>
+        </div>
+
+        <!-- Single or Multiple File Upload Field -->
+        <div class="mb-3">
+            <label for="ImageFile" class="form-label">Fotoğraf Yükle</label>
+            <input type="file" name="ImageFiles" id="ImageFile" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Ekle</button>
+            <a href="@Url.Action("Index", "Gallery")" class="btn btn-secondary">İptal</a>
+        </div>
+    </form>
+</div>
+
+<!-- Edit Gallery Modal -->
+<div class="modal fade" id="editGalleryModal" tabindex="-1" aria-labelledby="editGalleryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" id="editGalleryModalBody">
+            <!-- Modal content will be loaded via AJAX -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Toggle file input to allow multiple file selection
+            $('#uploadOption').change(function () {
+                var selectedOption = $(this).val();
+                if (selectedOption === 'multiple') {
+                    $('#ImageFile').attr('multiple', 'multiple');
+                    $('#ImageFile').removeAttr('required');
+                } else {
+                    $('#ImageFile').removeAttr('multiple');
+                    $('#ImageFile').attr('required', 'required');
+                }
+            });
+
+            // Handle Edit Gallery Button Click
+            $('.edit-gallery-btn').click(function () {
+                var galleryId = $(this).data('id');
+                $.ajax({
+                    url: '@Url.Action("EditGalleryById", "Gallery")',
+                    type: 'GET',
+                    data: { id: galleryId },
+                    success: function (result) {
+                        $('#editGalleryModalBody').html(result);
+                        var editModal = new bootstrap.Modal(document.getElementById('editGalleryModal'));
+                        editModal.show();
+                    },
+                    error: function () {
+                        alert('Bir hata oluştu.');
+                    }
+                });
+            });
+
+            // Handle Edit Gallery Form Submission
+            $(document).on('submit', '#editGalleryForm', function (e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                $.ajax({
+                    url: '@Url.Action("EditGallery", "Gallery")',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response.success) {
+                            var editModal = bootstrap.Modal.getInstance(document.getElementById('editGalleryModal'));
+                            editModal.hide();
+                            location.reload();
+                        } else {
+                            alert('Hata: ' + response.message);
+                        }
+                    },
+                    error: function (xhr) {
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            alert('Hata: ' + xhr.responseJSON.errors.join(", "));
+                        } else {
+                            alert('Bir hata oluştu.');
+                            console.log(xhr.responseJSON);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

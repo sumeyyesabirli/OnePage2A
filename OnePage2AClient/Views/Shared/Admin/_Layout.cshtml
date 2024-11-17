@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <!-- Meta ve Title -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Banner Yönetimi</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Özel CSS -->
+    <link rel="stylesheet" href="~/css/admin.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <!-- Font Awesome 6 CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Admin Paneli</h2>
+        <a href="@Url.Action("Index", "Home")"><i class="fas fa-home"></i> Anasayfayı Gör</a>
+        <a href="@Url.Action("Index", "Banners")"><i class="fas fa-flag"></i> Banners</a>
+        <a href="@Url.Action("Index", "Services")"><i class="fas fa-concierge-bell"></i> Hizmetler</a>
+        <a href="@Url.Action("Index", "References")"><i class="fas fa-book"></i> Referanslar</a>
+        <a href="@Url.Action("Index", "Gallery")"><i class="fas fa-image"></i> Galeri</a>
+        <a href="@Url.Action("Index", "AboutUs")"><i class="fas fa-info-circle"></i> Hakkımızda</a>
+        <a href="@Url.Action("Index", "Contact")"><i class="fas fa-address-book"></i> İletişim</a>
+   
+
+        @if (User.IsInRole("admin"))
+        {
+            <a href="@Url.Action("Index", "User")"><i class="fas fa-users"></i> Bütün Kullanıcılar</a>
+            <a href="@Url.Action("Index", "Registers")"><i class="fas fa-user-plus"></i> Kullanıcı Ekle</a>
+        }
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <form asp-action="Logout" asp-controller="Login" method="post" class="mt-3">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger w-100">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış Yap (@User.Identity.Name)
+                </button>
+            </form>
+        }
+        else
+        {
+            <a href="@Url.Action("Index", "Login")"><i class="fas fa-sign-in-alt"></i> Giriş Yap</a>
+        }
+    </div>
+
+    <!-- Ana İçerik -->
+    <div class="main-content">
+        @RenderBody()
+    </div>
+
+    <!-- JavaScript kütüphaneleri -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js"></script>
+    <!-- Özelleştirilmiş JS -->
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

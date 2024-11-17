@@ -1,0 +1,163 @@
+﻿@model List<OnePage2ABussiness.References.Models.AddReferencesModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/Admin/_Layout.cshtml";
+}
+
+<!-- references Listesi -->
+<div class="container mt-5">
+    <h1 class="page-title">Referans Listesi</h1>
+    <form action="@Url.Action("SetActiveReferences", "References")" method="post">
+        @Html.AntiForgeryToken()
+        <table class="table table-striped admin-table">
+            <thead>
+                <tr>
+                    <th>Başlık</th>
+                    <th>Fotoğraf</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var references in Model)
+                {
+                    <tr>
+                        <td>@references.ReferemcesTitle</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(references.ImgUrl))
+                            {
+                                <img src="@references.ImgUrl" alt="Fotoğraf Eksik" class="references-image" style="width:100px;" />
+                            }
+                            else
+                            {
+                                <span>Fotoğraf Yok</span>
+                            }
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-warning edit-references-btn" data-id="@references.Id">
+                                <i class="fas fa-edit"></i> Düzenle
+                            </button>
+                            <a href="@Url.Action("DeleteReferences", "References", new { id = references.Id })" class="btn btn-danger">Sil</a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+    <nav>
+        <ul class="pagination justify-content-center">
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", "References", new { page = ViewBag.CurrentPage - 1 })">Önceki</a>
+                </li>
+            }
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", "References", new { page = i })">@i</a>
+                </li>
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", "References", new { page = ViewBag.CurrentPage + 1 })">Sonraki</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
+
+<!-- Yeni references Oluştur -->
+<div class="container mt-5">
+    <h1 class="page-title">Yeni Referans Oluştur</h1>
+    <form action="@Url.Action("AddReferences", "References")" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div class="mb-3">
+            <label for="ReferemcesTitle" class="form-label">Başlık</label>
+            <input type="text" id="ReferemcesTitle" name="ReferemcesTitle" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label for="ImageFile" class="form-label">Fotoğraf Yükle</label>
+            <input type="file" name="ImageFile" id="ImageFile" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Ekle</button>
+            <a href="@Url.Action("Index", "References")" class="btn btn-secondary">İptal</a>
+        </div>
+    </form>
+</div>
+
+<!-- Edit references Modal -->
+<div class="modal fade" id="editReferencesModal" tabindex="-1" aria-labelledby="editReferencesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" id="editReferencesModalBody">
+            <!-- Modal içeriği AJAX ile yüklenecek -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- JavaScript Kütüphaneleri -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.edit-references-btn').click(function () {
+                var referencesId = $(this).data('id');
+                $.ajax({
+                    url: '@Url.Action("EditReferencesById", "References")',
+                    type: 'GET',
+                    data: { id: referencesId },
+                    success: function (result) {
+                        $('#editReferencesModalBody').html(result);
+                        var editModal = new bootstrap.Modal(document.getElementById('editReferencesModal'));
+                        editModal.show();
+                    },
+                    error: function () {
+                        alert('Bir hata oluştu ById.');
+                    }
+                });
+            });
+
+            $(document).on('submit', '#editReferencesForm', function (e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                for (var pair of formData.entries()) {
+                    console.log(pair[0] + ': ' + pair[1]);
+                }
+                $.ajax({
+                    url: '@Url.Action("EditReferences", "References")',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function () {
+                        var editModal = bootstrap.Modal.getInstance(document.getElementById('editReferencesModal'));
+                        editModal.hide();
+                        location.reload();
+                    },
+                    error: function (xhr) {
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            alert('Hata: ' + xhr.responseJSON.errors.join(", "));
+                        } else {
+                            alert('Bir hata oluştu allttaki.');
+                            console.log(xhr.responseJSON);
+                        }
+                    }
+                });
+            });
+
+        });
+    </script>
+}
+
+

@@ -1,0 +1,31 @@
+﻿@model OnePage2ABussiness.Contacts.Models.UpdateContactModel
+
+<div class="modal-header">
+    <h5 class="modal-title" id="editContactModalLabel">Contact Düzenle</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+</div>
+<div class="modal-body">
+    <form id="editContactForm">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+
+        <div class="mb-3">
+            <label for="Address" class="form-label">Adres</label>
+            @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+        </div>
+
+        <div class="mb-3">
+            <label for="Phone" class="form-label">Telefon</label>
+            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+        </div>
+
+        <div class="mb-3">
+            <label for="Email" class="form-label">Email</label>
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="submit" form="editContactForm" class="btn btn-primary">Güncelle</button>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+</div>
