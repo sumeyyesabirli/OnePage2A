@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnePage2ABussiness.AboutUs.Models;
 using OnePage2ABussiness.Users.Abstract;
 
 namespace OnePage2AClient.Controllers
@@ -15,14 +16,25 @@ namespace OnePage2AClient.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             int pageSize = 5;
-            var users = await _userService.GetPagedUsersAsync(page, pageSize);
-            var totalUserCount = await _userService.GetTotalUserCountAsync();
 
-            ViewBag.TotalPages = (int)Math.Ceiling(totalUserCount / (double)pageSize);
+            // Fetch paginated users
+            var users = await _userService.GetPagedUsersAsync(page, pageSize);
+
+            // Fetch total user count for pagination
+            int totalUsers = await _userService.GetTotalUserCountAsync();
+
+            // Convert the result to a List to satisfy the view
+            var paginatedUsers = users.ToList();
+
+            // Set ViewBag properties for pagination
+            ViewBag.TotalPages = (int)Math.Ceiling(totalUsers / (double)pageSize);
             ViewBag.CurrentPage = page;
 
-            return View(users);
+            // Pass the paginated user list to the view
+            return View(paginatedUsers);
         }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

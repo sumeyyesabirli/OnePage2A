@@ -20,13 +20,30 @@ namespace OnePage2AClient.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             int pageSize = 5;
-            var contacts = await _repository.GetAllAsync();
-            var totalItems = await _repository.CountAsync();
 
-            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            // Fetch data from repository and map to AddContactModel
+            var contacts = await _repository.GetAllAsync();
+            var contactModels = contacts.Select(contact => new AddContactModel
+            {
+                Id = contact.Id,
+                Address = contact.Address,
+                Phone = contact.Phone,
+                Email = contact.Email,
+                CreatedByName = contact.CreatedByName,
+                CreatedAt = contact.CreatedAt
+            }).ToList(); // Ensure it's a List<AddContactModel>
+
+            // Paginate
+            var paginatedContacts = contactModels
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList(); // Ensure this is also a List<AddContactModel>
+
+            ViewBag.TotalPages = (int)Math.Ceiling(contactModels.Count / (double)pageSize);
             ViewBag.CurrentPage = page;
 
-            return View(contacts.Skip((page - 1) * pageSize).Take(pageSize));
+            // Pass paginated list to the view
+            return View(paginatedContacts);
         }
 
         [HttpPost]

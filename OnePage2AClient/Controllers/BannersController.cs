@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnePage2ABussiness.Banners.Models;
+using OnePage2ABussiness.Services.Models;
 using OnePage2AClient.Controllers;
 using OnePage2AClientBussines.Banners.Abstract;
 using OnePage2ADataAccess.Contexts;
@@ -16,17 +17,31 @@ public class BannersController : BaseController
         _bannerService = bannerService;
         _repository = repository;
     }
+    [HttpGet]
     public async Task<IActionResult> Index(int page = 1)
     {
         int pageSize = 5;
         var banners = await _repository.GetAllAsync();
-        var totalItems = await _repository.CountAsync();
 
-        ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+        // Model dönüşümü
+        var bannerModels = banners.Select(b => new AddBannerModel
+        {
+            Id = b.Id,
+            Title = b.Title,
+            Description = b.Description,
+            ImgUrl = b.ImgUrl,
+            CreatedByName = b.CreatedByName,
+            IsActive = b.IsActive
+        }).ToList();
+
+        // Sayfalama bilgileri
+        ViewBag.TotalPages = (int)Math.Ceiling(banners.Count() / (double)pageSize);
         ViewBag.CurrentPage = page;
 
-        return View(banners.Skip((page - 1) * pageSize).Take(pageSize));
+        // Sayfaya model gönderimi
+        return View(bannerModels.Skip((page - 1) * pageSize).Take(pageSize).ToList());
     }
+
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -36,6 +51,31 @@ public class BannersController : BaseController
         TempData["SuccessMessage"] = "Banner başarıyla eklendi.";
         return RedirectToAction(nameof(Index));
     }
+
+    [HttpGet]
+    public async Task<IActionResult> EditBannerById(int id)
+    {
+        // Veritabanından ilgili banner'ı çekme
+        var banner = await _repository.GetByIdAsync(id);
+        if (banner == null)
+        {
+            return NotFound();
+        }
+
+        // UpdateBannerModel'e dönüştürme
+        var updateBannerModel = new UpdateBannerModel
+        {
+            Id = banner.Id,
+            Title = banner.Title,
+            Description = banner.Description,
+            ImgUrl = banner.ImgUrl,
+            IsActive = banner.IsActive
+        };
+
+        // PartialView ile dönüş
+        return PartialView("~/Views/Shared/Admin/Banner/_EditBannerPartial.cshtml", updateBannerModel);
+    }
+
 
     [HttpPost]
     [ValidateAntiForgeryToken]

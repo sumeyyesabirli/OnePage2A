@@ -4,7 +4,7 @@ using OnePage2ADataAccess.Contexts;
 
 namespace OnePage2AClient.Controllers
 {
-    [Authorize(Roles = "admin,editor")]
+    //[Authorize(Roles = "admin,editor")]
     public class BaseController : Controller
     {
         protected readonly DbContext2A _context;

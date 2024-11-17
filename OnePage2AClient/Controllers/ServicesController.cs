@@ -22,10 +22,18 @@ public class ServicesController : BaseController
         var services = await _repository.GetAllAsync();
         var totalItems = await _repository.CountAsync();
 
+        var serviceModels = services.Select(s => new AddServiceModel
+        {
+            Id = s.Id,
+            ServicesTitle = s.ServicesTitle,
+            ServicesDescription = s.ServicesDescription,
+            ImgUrl = s.ImgUrl
+        }).ToList();
+
         ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         ViewBag.CurrentPage = page;
 
-        return View(services.Skip((page - 1) * pageSize).Take(pageSize));
+        return View(serviceModels.Skip((page - 1) * pageSize).Take(pageSize).ToList());
     }
 
     [HttpPost]
@@ -44,6 +52,27 @@ public class ServicesController : BaseController
         await _serviceService.UpdateServiceAsync(service, imageFile);
         TempData["SuccessMessage"] = "Services başarıyla güncellendi.";
         return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public IActionResult EditServicesById(int id)
+    {
+        var service = _context.Services.FirstOrDefault(s => s.Id == id);
+        if (service == null)
+        {
+            return NotFound();
+        }
+
+        var updateServiceModel = new UpdateServiceModel
+        {
+            Id = service.Id,
+            ServicesTitle = service.ServicesTitle,
+            ServicesDescription = service.ServicesDescription,
+            ImgUrl = service.ImgUrl,
+            IsActive = service.IsActive
+        };
+
+        return PartialView("~/Views/Shared/Admin/Services/_EditServicesPartial.cshtml", updateServiceModel);
     }
 
     [HttpPost]

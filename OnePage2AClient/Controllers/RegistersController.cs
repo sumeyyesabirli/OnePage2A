@@ -15,7 +15,7 @@ namespace OnePage2AClient.Controllers
             _registerService = registerService;
         }
 
-        public IActionResult Register()
+        public IActionResult Index()
         {
             return View();
         }

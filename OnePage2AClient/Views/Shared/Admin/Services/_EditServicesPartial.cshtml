@@ -5,18 +5,18 @@
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
 </div>
 <div class="modal-body">
-    <form id="editServicesForm" enctype="multipart/form-data">
+    <form id="editServicesForm" action="@Url.Action("EditServices", "Services")" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Id)
 
         <div class="mb-3">
-            <label for="Title" class="form-label">Başlık</label>
-            @Html.TextBoxFor(m => m.ServicesTitle, new { @class = "form-control" })
+            <label for="ServicesTitle" class="form-label">Başlık</label>
+            @Html.TextBoxFor(m => m.ServicesTitle, new { @class = "form-control", id = "ServicesTitle" })
         </div>
 
         <div class="mb-3">
-            <label for="Description" class="form-label">İçerik</label>
-            @Html.TextAreaFor(m => m.ServicesDescription, new { @class = "form-control", rows = "4" })
+            <label for="ServicesDescription" class="form-label">İçerik</label>
+            @Html.TextAreaFor(m => m.ServicesDescription, new { @class = "form-control", rows = "4", id = "ServicesDescription" })
         </div>
 
         <div class="mb-3">

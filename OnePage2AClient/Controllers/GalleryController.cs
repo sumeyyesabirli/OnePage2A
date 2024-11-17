@@ -16,8 +16,6 @@ public class GalleryController : BaseController
         _galleryService = galleryService;
         _repository = repository;
     }
-    
-
     public async Task<IActionResult> Index(int page = 1)
     {
         int pageSize = 5;
@@ -27,7 +25,18 @@ public class GalleryController : BaseController
         ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         ViewBag.CurrentPage = page;
 
-        return View(galleries.Skip((page - 1) * pageSize).Take(pageSize));
+        var galleryModels = galleries.Skip((page - 1) * pageSize)
+                                      .Take(pageSize)
+                                      .Select(g => new AddGalleryModel
+                                      {
+                                          Id = g.Id,
+                                          ImgUrl = g.ImgUrl,
+                                          CreatedByName = g.CreatedByName,
+                                          CreatedAt = g.CreatedAt,
+                                          IsActive = g.IsActive
+                                      }).ToList();
+
+        return View(galleryModels);
     }
 
     [HttpPost]

@@ -136,13 +136,12 @@
                 });
             });
 
-            // Edit formunu submit etme
             $(document).on('submit', '#editServicesForm', function (e) {
-                e.preventDefault();
+                e.preventDefault(); // Prevent default form submission
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: '@Url.Action("EditServices", "Services")',
+                    url: $(this).attr('action'),
                     type: 'POST',
                     data: formData,
                     contentType: false,
@@ -150,17 +149,19 @@
                     success: function () {
                         var editModal = bootstrap.Modal.getInstance(document.getElementById('editServicesModal'));
                         editModal.hide();
-                        location.reload();
+                        location.reload(); // Reload the page to reflect changes
                     },
                     error: function (xhr) {
                         if (xhr.responseJSON && xhr.responseJSON.errors) {
                             alert('Hata: ' + xhr.responseJSON.errors.join(", "));
                         } else {
-                            alert('Bir hata oluştu.');
+                            alert('Güncelleme sırasında bir hata oluştu.');
+                            console.error(xhr.responseText);
                         }
                     }
                 });
             });
+
         });
     </script>
 }

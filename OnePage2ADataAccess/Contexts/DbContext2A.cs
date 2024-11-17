@@ -1,22 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using OnePage2AEntity.Entites;
 
 namespace OnePage2ADataAccess.Contexts
 {
     public class DbContext2A : DbContext
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public DbContext2A(DbContextOptions<DbContext2A> options, IHttpContextAccessor httpContextAccessor): base(options)
+        public DbContext2A(DbContextOptions<DbContext2A> options) : base(options)
         {
-            _httpContextAccessor = httpContextAccessor;
+
         }
+
+        //private readonly IHttpContextAccessor _httpContextAccessor;
+
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
         }
 
-        // DbSet tanımlamaları
         public DbSet<User> Users { get; set; }
         public DbSet<Services> Services { get; set; }
         public DbSet<References> References { get; set; }
@@ -25,7 +28,7 @@ namespace OnePage2ADataAccess.Contexts
         public DbSet<Banner> Banners { get; set; }
         public DbSet<AboutUs> AboutUs { get; set; }
 
-      /* public override int SaveChanges()
+        /*public override int SaveChanges()
         {
             var entries = ChangeTracker.Entries()
                 .Where(e => e.Entity is BaseEntity &&
@@ -34,9 +37,7 @@ namespace OnePage2ADataAccess.Contexts
             foreach (var entityEntry in entries)
             {
                 var entity = (BaseEntity)entityEntry.Entity;
-
-                // Kullanıcı adını alın (HttpContext'e erişim gerekir)
-               var currentUserName = _httpContextAccessor.HttpContext?.User?.Identity?.Name ?? "System";
+                var currentUserName = _httpContextAccessor.HttpContext?.User?.Identity?.Name ?? "System";
 
                 if (entityEntry.State == EntityState.Added)
                 {
@@ -52,6 +53,4 @@ namespace OnePage2ADataAccess.Contexts
             return base.SaveChanges();
         }*/
     }
-
-
 }

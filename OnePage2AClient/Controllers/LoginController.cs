@@ -25,7 +25,7 @@ namespace OnePage2AClient.Controllers
         // POST: Login/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(AddLoginModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -34,15 +34,21 @@ namespace OnePage2AClient.Controllers
 
             try
             {
-                var user = await _loginServices.AuthenticateAsync(model, model.Password);
+                var loginModel = new AddLoginModel
+                {
+                    Name = model.Name,
+                    Password = model.Password
+                };
+
+                var user = await _loginServices.AuthenticateAsync(loginModel, model.Password);
 
                 // Kullanıcıyı cookie ile oturum aç
                 var claims = new List<System.Security.Claims.Claim>
-                {
-                    new(System.Security.Claims.ClaimTypes.Name, user.Name),
-                    new(System.Security.Claims.ClaimTypes.Email, user.Email),
-                    new(System.Security.Claims.ClaimTypes.Role, user.Role)
-                };
+        {
+            new(System.Security.Claims.ClaimTypes.Name, user.Name),
+            new(System.Security.Claims.ClaimTypes.Email, user.Email),
+            new(System.Security.Claims.ClaimTypes.Role, user.Role)
+        };
 
                 var claimsIdentity = new System.Security.Claims.ClaimsIdentity(
                     claims, Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme);
@@ -52,7 +58,7 @@ namespace OnePage2AClient.Controllers
                     new System.Security.Claims.ClaimsPrincipal(claimsIdentity)
                 );
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Banners");
             }
             catch (Exception ex)
             {
@@ -60,6 +66,7 @@ namespace OnePage2AClient.Controllers
                 return View("Index", model);
             }
         }
+
 
         // POST: Login/Logout
         [HttpPost]

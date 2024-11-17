@@ -2,6 +2,7 @@
 {
     public class AddAboutUsModel
     {
+        public int Id { get; set; }
         public string? ImgUrl { get; set; }
         public string AboutUsDescription { get; set; }
         public string CreatedByName { get; set; }

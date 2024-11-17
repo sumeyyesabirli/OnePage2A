@@ -70,6 +70,5 @@ namespace OnePage2ABussiness.Services.Concrete
                 await _repository.UpdateAsync(services);
             }
         }
-
     }
 }

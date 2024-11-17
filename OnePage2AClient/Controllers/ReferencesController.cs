@@ -20,14 +20,25 @@ namespace OnePage2AClient.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             int pageSize = 5;
-            var referencess = await _repository.GetAllAsync();
+            var references = await _repository.GetAllAsync();
             var totalItems = await _repository.CountAsync();
 
             ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
             ViewBag.CurrentPage = page;
 
-            return View(referencess.Skip((page - 1) * pageSize).Take(pageSize));
+            // References türünü AddReferencesModel'e dönüştür
+            var referencesModel = references.Skip((page - 1) * pageSize)
+                                             .Take(pageSize)
+                                             .Select(r => new AddReferencesModel
+                                             {
+                                                 Id = r.Id,
+                                                 ReferemcesTitle = r.ReferemcesTitle,
+                                                 ImgUrl = r.ImgUrl
+                                             }).ToList();
+
+            return View(referencesModel);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

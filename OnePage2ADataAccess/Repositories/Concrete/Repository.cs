@@ -1,25 +1,24 @@
-﻿using OnePage2ADataAccess.Repositories.Abstract;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using OnePage2ADataAccess.Contexts;
+using OnePage2ADataAccess.Repositories.Abstract;
 using System.Linq.Expressions;
 
 namespace OnePage2ADataAccess.Repositories.Concrete
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly DbContext _context;
+        private readonly DbContext2A _context;
         private readonly DbSet<T> _dbSet;
 
-        public Repository(DbContext context)
+        public Repository(DbContext2A context)
         {
             _context = context;
-            _dbSet = _context.Set<T>();
+            _dbSet = context.Set<T>();
         }
 
         public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter = null)
         {
-            return filter == null
-                ? await _dbSet.ToListAsync()
-                : await _dbSet.Where(filter).ToListAsync();
+            return filter == null ? await _dbSet.ToListAsync() : await _dbSet.Where(filter).ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(int id)
@@ -41,7 +40,7 @@ namespace OnePage2ADataAccess.Repositories.Concrete
 
         public async Task DeleteAsync(int id)
         {
-            var entity = await GetByIdAsync(id);
+            var entity = await _dbSet.FindAsync(id);
             if (entity != null)
             {
                 _dbSet.Remove(entity);
@@ -51,9 +50,7 @@ namespace OnePage2ADataAccess.Repositories.Concrete
 
         public async Task<int> CountAsync(Expression<Func<T, bool>> filter = null)
         {
-            return filter == null
-                ? await _dbSet.CountAsync()
-                : await _dbSet.CountAsync(filter);
+            return filter == null ? await _dbSet.CountAsync() : await _dbSet.CountAsync(filter);
         }
     }
 }

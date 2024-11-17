@@ -5,7 +5,6 @@
     ViewBag.Title = "Banners Panel";
 }
 
-
 <!-- Banner Listesi -->
 <div class="container mt-5">
     <h1 class="page-title">Banners Listesi</h1>
@@ -18,6 +17,7 @@
                     <th>İçerik</th>
                     <th>Fotoğraf</th>
                     <th>Ekleyen</th>
+                    <th>Durum</th>
                     <th>İşlem</th>
                 </tr>
             </thead>
@@ -26,7 +26,7 @@
                 {
                     <tr>
                         <td>@banner.Title</td>
-                        <td>@banner.Description</td>              
+                        <td>@banner.Description</td>
                         <td>
                             @if (!string.IsNullOrEmpty(banner.ImgUrl))
                             {
@@ -39,17 +39,28 @@
                         </td>
                         <td>@banner.CreatedByName</td>
                         <td>
+                            @if (banner.IsActive)
+                            {
+                                <span class="badge bg-success">Aktif</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Pasif</span>
+                            }
+                        </td>
+                        <td>
                             <button type="button" class="btn btn-warning edit-banner-btn" data-id="@banner.Id">
                                 <i class="fas fa-edit"></i> Düzenle
                             </button>
                             <a href="@Url.Action("DeleteBanner", "Banners", new { id = banner.Id })" class="btn btn-danger">Sil</a>
-
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
     </form>
+
+    <!-- Sayfalama -->
     <nav>
         <ul class="pagination justify-content-center">
             @if (ViewBag.CurrentPage > 1)
@@ -83,13 +94,12 @@
         @Html.AntiForgeryToken()
         <div class="mb-3">
             <label for="Title" class="form-label">Başlık</label>
-            <input type="text" id="Title" name="Title" class="form-control"  />
+            <input type="text" id="Title" name="Title" class="form-control" required />
         </div>
 
         <div class="mb-3">
             <label for="Description" class="form-label">İçerik</label>
-            <textarea id="Description" name="Description" class="form-control" ></textarea>
-
+            <textarea id="Description" name="Description" class="form-control" required></textarea>
         </div>
 
         <div class="mb-3">
@@ -116,9 +126,7 @@
 @section Scripts {
     <!-- JavaScript Kütüphaneleri -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Font Awesome JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js"></script>
 
     <script>
@@ -135,7 +143,7 @@
                         editModal.show();
                     },
                     error: function () {
-                        alert('Bir hata oluştu ById.');
+                        alert('Bir hata oluştu.');
                     }
                 });
             });
@@ -143,9 +151,7 @@
             $(document).on('submit', '#editBannerForm', function (e) {
                 e.preventDefault();
                 var formData = new FormData(this);
-                for (var pair of formData.entries()) {
-                    console.log(pair[0] + ': ' + pair[1]);
-                }
+
                 $.ajax({
                     url: '@Url.Action("EditBanner", "Banners")',
                     type: 'POST',
@@ -158,16 +164,11 @@
                         location.reload();
                     },
                     error: function (xhr) {
-                        if (xhr.responseJSON && xhr.responseJSON.errors) {
-                            alert('Hata: ' + xhr.responseJSON.errors.join(", "));
-                        } else {
-                            alert('Bir hata oluştu allttaki.');
-                            console.log(xhr.responseJSON);
-                        }
+                        alert('Bir hata oluştu.');
+                        console.log(xhr);
                     }
                 });
             });
-
         });
     </script>
 }

@@ -1,107 +1,72 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using OnePage2ABussiness.Gallery.Abstract;
 using OnePage2ABussiness.Gallery.Models;
 using OnePage2ADataAccess.Repositories.Abstract;
 using OnePage2AEntity.Entites;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using OnePage2ACore.Abstract;
 
-namespace OnePage2ABussiness.Gallery
+public class GalleryService : IGalleryService
 {
-    public class GalleryService : IGalleryService
+    private readonly IRepository<Gallery> _repository;
+    private readonly IFileService _fileService;
+
+    public GalleryService(IRepository<Gallery> repository, IFileService fileService)
     {
-        private readonly IRepository<OnePage2AEntity.Entites.Gallery> _repository;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        _repository = repository;
+        _fileService = fileService;
+    }
 
-        public GalleryService(IRepository<OnePage2AEntity.Entites.Gallery> repository, IWebHostEnvironment webHostEnvironment)
+    public async Task AddGalleryAsync(AddGalleryModel galleryModel, IFormFile[] imageFiles)
+    {
+        foreach (var imageFile in imageFiles)
         {
-            _repository = repository;
-            _webHostEnvironment = webHostEnvironment;
+            if (imageFile != null)
+            {
+                galleryModel.ImgUrl = await _fileService.SaveFileAsync(imageFile, "images/gallery");
+            }
+
+            var galleryEntity = new Gallery
+            {
+                ImgUrl = galleryModel.ImgUrl,
+                CreatedByName = galleryModel.CreatedByName,
+                CreatedAt = galleryModel.CreatedAt,
+                IsActive = galleryModel.IsActive
+            };
+
+            await _repository.AddAsync(galleryEntity);
+        }
+    }
+
+
+    public async Task EditGalleryAsync(UpdateGalleryModel galleryModel, IFormFile imageFile)
+    {
+        var existingGallery = await _repository.GetByIdAsync(galleryModel.Id);
+        if (existingGallery == null)
+        {
+            throw new Exception("Galeri bulunamadı.");
         }
 
-        public async Task AddGalleryAsync(AddGalleryModel galleryModel, IFormFile[] imageFiles)
+        if (imageFile != null)
         {
-            if (imageFiles == null || imageFiles.Length == 0)
+            if (!string.IsNullOrEmpty(existingGallery.ImgUrl))
             {
-                throw new Exception("En az bir fotoğraf yüklenmelidir.");
+                _fileService.DeleteFile(existingGallery.ImgUrl);
             }
 
-            foreach (var imageFile in imageFiles)
-            {
-                if (imageFile.Length > 0)
-                {
-                    var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "gallery");
-                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(imageFile.FileName);
-                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await imageFile.CopyToAsync(stream);
-                    }
-
-                    var gallery = new OnePage2AEntity.Entites.Gallery
-                    {
-                        ImgUrl = "/images/gallery/" + uniqueFileName,
-                        CreatedByName = galleryModel.CreatedByName,
-                        CreatedAt = DateTime.UtcNow,
-                        IsActive = false // Set default value or based on your requirement
-                    };
-
-                    await _repository.AddAsync(gallery);
-                }
-            }
+            existingGallery.ImgUrl = await _fileService.SaveFileAsync(imageFile, "images/gallery");
         }
 
-        public async Task EditGalleryAsync(UpdateGalleryModel galleryModel, IFormFile imageFile)
+        existingGallery.UpdatedAt = DateTime.UtcNow;
+        await _repository.UpdateAsync(existingGallery);
+    }
+
+    public async Task SetActiveGalleryAsync(int selectedGalleryId)
+    {
+        var galleries = await _repository.GetAllAsync();
+        foreach (var gallery in galleries)
         {
-            var existingGallery = await _repository.GetByIdAsync(galleryModel.Id);
-            if (existingGallery == null)
-            {
-                throw new Exception("Galeri bulunamadı.");
-            }
-
-            if (imageFile != null && imageFile.Length > 0)
-            {
-                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "gallery");
-                var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(imageFile.FileName);
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await imageFile.CopyToAsync(stream);
-                }
-
-                existingGallery.ImgUrl = "/images/gallery/" + uniqueFileName;
-            }
-
-            existingGallery.IsActive = galleryModel.IsActive;
-            existingGallery.CreatedByName = galleryModel.CreatedByName;
-            existingGallery.CreatedAt = galleryModel.CreatedAt;
-
-            await _repository.UpdateAsync(existingGallery);
-        }
-
-        public async Task SetActiveGalleryAsync(int selectedGalleryId)
-        {
-            var galleries = await _repository.GetAllAsync();
-            foreach (var gallery in galleries)
-            {
-                gallery.IsActive = gallery.Id == selectedGalleryId;
-                await _repository.UpdateAsync(gallery);
-            }
+            gallery.IsActive = gallery.Id == selectedGalleryId;
+            await _repository.UpdateAsync(gallery);
         }
     }
 }

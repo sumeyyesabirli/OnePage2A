@@ -22,14 +22,34 @@ namespace OnePage2AClient.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             int pageSize = 5;
-            var aboutUs = await _repository.GetAllAsync();
-            var totalItems = await _repository.CountAsync();
 
-            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            // Fetch all AboutUs entities from the repository
+            var aboutUsEntities = await _repository.GetAllAsync();
+
+            // Map the entities to the view model
+            var aboutUsModels = aboutUsEntities.Select(aboutUs => new AddAboutUsModel
+            {
+                Id = aboutUs.Id,
+                AboutUsDescription = aboutUs.AboutUsDescription,
+                ImgUrl = aboutUs.ImgUrl,
+                CreatedByName = aboutUs.CreatedByName,
+                CreatedAt = aboutUs.CreatedAt
+            }).ToList();
+
+            // Apply pagination
+            var paginatedAboutUsModels = aboutUsModels
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            // Set ViewBag properties for pagination
+            ViewBag.TotalPages = (int)Math.Ceiling(aboutUsModels.Count / (double)pageSize);
             ViewBag.CurrentPage = page;
 
-            return View(aboutUs.Skip((page - 1) * pageSize).Take(pageSize));
+            // Pass the paginated view model to the view
+            return View(paginatedAboutUsModels);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
