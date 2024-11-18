@@ -28,6 +28,7 @@ namespace OnePage2ABussiness.References.Concrete
             {
                 ImgUrl = referencesModel.ImgUrl,
                 CreatedByName = createdByName,
+                ReferemcesTitle = referencesModel.ReferemcesTitle,
                 CreatedAt = DateTime.UtcNow,
                 IsActive = referencesModel.IsActive
             };
@@ -42,7 +43,7 @@ namespace OnePage2ABussiness.References.Concrete
             {
                 throw new Exception("References not found");
             }
-
+            existingReferences.ReferemcesTitle = referencesModel.ReferemcesTitle ?? existingReferences.ReferemcesTitle;
             existingReferences.IsActive = referencesModel.IsActive;
 
             if (imageFile != null)
@@ -52,7 +53,7 @@ namespace OnePage2ABussiness.References.Concrete
                     _fileService.DeleteFile(existingReferences.ImgUrl);
                 }
 
-                existingReferences.ImgUrl = await _fileService.SaveFileAsync(imageFile, "images/referencess");
+                existingReferences.ImgUrl = await _fileService.SaveFileAsync(imageFile, "images/references");
             }
 
             await _repository.UpdateAsync(existingReferences);

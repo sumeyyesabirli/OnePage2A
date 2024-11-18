@@ -53,7 +53,7 @@ namespace OnePage2ABussiness.Services.Concrete
             await _userRepository.UpdateAsync(user);
 
             // Şifre sıfırlama linkini oluştur
-            var resetLink = $"https://yourdomain.com/Login/ResetPassword?token={user.PasswordResetToken}";
+            var resetLink = $"https://localhost:7208/Login/ResetPassword?token={user.PasswordResetToken}";
             SendEmail(user.Email, "Şifre Sıfırlama", $"Şifre sıfırlamak için tıklayın: <a href='{resetLink}'>Şifre Sıfırla</a>");
         }
 

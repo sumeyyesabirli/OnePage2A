@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnePage2ABussiness.References.Abstract;
 using OnePage2ABussiness.References.Models;
+using OnePage2ABussiness.Services.Models;
 using OnePage2ADataAccess.Contexts;
 using OnePage2ADataAccess.Repositories.Abstract;
 using OnePage2AEntity.Entites;
@@ -47,6 +48,26 @@ namespace OnePage2AClient.Controllers
             await _referencesService.AddReferencesAsync(references, imageFile, User.Identity.Name);
             TempData["SuccessMessage"] = "References başarıyla eklendi.";
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult EditReferencesById(int id)
+        {
+            var references = _context.References.FirstOrDefault(r => r.Id == id);
+            if (references == null)
+            {
+                return NotFound();
+            }
+
+            var updateReferencesModel = new UpdateReferencesModel
+            {
+                Id = references.Id,
+                ReferemcesTitle = references.ReferemcesTitle,
+                ImgUrl = references.ImgUrl,
+                IsActive = references.IsActive
+            };
+
+            return PartialView("~/Views/Shared/Admin/References/_EditReferencesPartial.cshtml", updateReferencesModel);
         }
 
         [HttpPost]

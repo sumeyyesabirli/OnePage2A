@@ -15,14 +15,13 @@ namespace OnePage2AClient.Controllers
             _loginServices = loginServices;
         }
 
-        // GET: Login/Index
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
-        // POST: Login/Login
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -44,11 +43,11 @@ namespace OnePage2AClient.Controllers
 
                 // Kullanıcıyı cookie ile oturum aç
                 var claims = new List<System.Security.Claims.Claim>
-        {
-            new(System.Security.Claims.ClaimTypes.Name, user.Name),
-            new(System.Security.Claims.ClaimTypes.Email, user.Email),
-            new(System.Security.Claims.ClaimTypes.Role, user.Role)
-        };
+                {
+                    new(System.Security.Claims.ClaimTypes.Name, user.Name),
+                    new(System.Security.Claims.ClaimTypes.Email, user.Email),
+                    new(System.Security.Claims.ClaimTypes.Role, user.Role)
+                };
 
                 var claimsIdentity = new System.Security.Claims.ClaimsIdentity(
                     claims, Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme);
@@ -68,7 +67,6 @@ namespace OnePage2AClient.Controllers
         }
 
 
-        // POST: Login/Logout
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -77,14 +75,12 @@ namespace OnePage2AClient.Controllers
             return RedirectToAction("Index", "Login");
         }
 
-        // GET: Login/ForgotPassword
         [HttpGet]
         public IActionResult ForgotPassword()
         {
             return View();
         }
 
-        // POST: Login/ForgotPassword
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)

@@ -40,18 +40,11 @@ public class GalleryController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddGallery(string createdByName, IFormFile[] imageFiles)
+    public async Task<IActionResult> AddGallery(AddGalleryModel galleryModel, IFormFile[] imageFiles)
     {
         try
-        {
-            var galleryModel = new AddGalleryModel
-            {
-                CreatedByName = createdByName,
-                CreatedAt = DateTime.UtcNow,
-                IsActive = false
-            };
-
-            await _galleryService.AddGalleryAsync(galleryModel, imageFiles);
+        {            
+            await _galleryService.AddGalleryAsync(galleryModel, imageFiles, User.Identity.Name);
             TempData["SuccessMessage"] = "Galeri başarıyla eklendi.";
         }
         catch (Exception ex)

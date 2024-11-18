@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnePage2ABussiness.Contacts.Abstract;
 using OnePage2ABussiness.Contacts.Models;
+using OnePage2ABussiness.Services.Models;
 using OnePage2ADataAccess.Contexts;
 using OnePage2ADataAccess.Repositories.Abstract;
 using OnePage2AEntity.Entites;
@@ -53,6 +54,25 @@ namespace OnePage2AClient.Controllers
             await _contactService.AddContactAsync(contact, User.Identity.Name);
             TempData["SuccessMessage"] = "Contact başarıyla eklendi.";
             return RedirectToAction(nameof(Index));
+        }
+        [HttpGet]
+        public IActionResult EditContactById(int id)
+        {
+            var contact = _context.Contacts.FirstOrDefault(x => x.Id == id);
+            if (contact == null)
+            {
+                return NotFound();
+            }
+
+            var contactServiceModel = new UpdateContactModel
+            {
+                Id = contact.Id,
+                Phone = contact.Phone,
+                Email = contact.Email,
+                Address = contact.Address,
+            };
+
+            return PartialView("~/Views/Shared/Admin/Contact/_EditContactPartial.cshtml", contactServiceModel);
         }
 
         [HttpPost]

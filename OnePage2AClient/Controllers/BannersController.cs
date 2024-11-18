@@ -55,8 +55,7 @@ public class BannersController : BaseController
     [HttpGet]
     public async Task<IActionResult> EditBannerById(int id)
     {
-        // Veritabanından ilgili banner'ı çekme
-        var banner = await _repository.GetByIdAsync(id);
+        var banner = _context.Banners.FirstOrDefault(b => b.Id == id);
         if (banner == null)
         {
             return NotFound();
@@ -73,7 +72,7 @@ public class BannersController : BaseController
         };
 
         // PartialView ile dönüş
-        return PartialView("~/Views/Shared/Admin/Banner/_EditBannerPartial.cshtml", updateBannerModel);
+        return PartialView("~/Views/Shared/Admin/Banners/_EditBannerPartial.cshtml", updateBannerModel);
     }
 
 

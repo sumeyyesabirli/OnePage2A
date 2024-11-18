@@ -1,0 +1,433 @@
+﻿@model OnePage2AClient.Models.HomeViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Startup - Startup Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="~/assets/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/assets/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="~/assets/lib/animate/animate.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="~/assets/css/style.css" rel="stylesheet">
+    <style>
+        .gallery-img {
+            width: 300px; /* Genişlik sabit */
+            height: 300px; /* Yükseklik sabit */
+            object-fit: cover; /* Fotoğrafı keserek kutuya sığdır */
+            border-radius: 10px; /* Kenarları yuvarlatmak */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner"></div>
+    </div>
+    <!-- Spinner End -->
+    <!-- Navbar & Carousel Start -->
+    <div class="container-fluid position-relative p-0">
+        <nav class="navbar navbar-expand-lg navbar-dark px-5 py-3 py-lg-0">
+            <a href="/" class="navbar-brand">
+                <img src="~/assets/img/2ALogo.png" alt="2A Logo" style="height: 80px;">
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="fa fa-bars"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto py-0">
+                    <a href="#hakkimizda" class="nav-item nav-link">Hakkımızda</a>
+                    <a href="#referanslar" class="nav-item nav-link">Referanslar</a>
+                    <a href="#hizmetlerimiz" class="nav-item nav-link">Hizmetlerimiz</a>
+                    <a href="#galeri" class="nav-item nav-link">Galeri</a>
+                    <a href="#iletisim" class="nav-item nav-link">İletişim</a>
+                </div>
+            </div>
+            <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal"></i></butaton>
+            <a href="https://www.ecopymarket.com/" class="btn btn-primary py-2 px-4 ms-3">Ecopy Market</a>
+            <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal"></i></butaton>
+            <a href="@Url.Action("Index", "Login")" class="btn btn-primary py-2 px-4 ms-3">Giriş</a>
+    
+        </nav>
+
+
+
+        <div id="header-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                @foreach (var banner in Model.Banner)
+                {
+                    // Varsayılan fotoğraf kullanımı, eğer ImgUrl boşsa
+                    var imageUrl = string.IsNullOrEmpty(banner.ImgUrl) ? "~/assets/img/testimonial-1.jpg" : banner.ImgUrl;
+
+                    <div class="carousel-item @(banner == Model.Banner.First() ? "active" : "")">
+                        <img class="w-100" src="@imageUrl" alt="Banner Image">
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                            <div class="p-3" style="max-width: 900px;">
+                                <h5 class="text-white text-uppercase mb-3 animated slideInDown">@banner.Title</h5>
+                                <h1 class="display-1 text-white mb-md-4 animated zoomIn">@banner.Description</h1>
+                                <a href="#hizmetlerimiz" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Hizmetler</a>
+                                <a href="#iletisim" class="btn btn-outline-light py-md-3 px-md-5 animated slideInRight">İletişim</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#header-carousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+    <!-- Navbar & Carousel End -->
+    <!-- Facts Start -->
+    <div class="container-fluid facts py-5 pt-lg-0">
+        <div class="container py-5 pt-lg-0">
+            <div class="row gx-0">
+                <div class="col-lg-4 wow zoomIn" data-wow-delay="0.1s">
+                    <div class="bg-primary shadow d-flex align-items-center justify-content-center p-4" style="height: 150px;">
+                        <div class="bg-white d-flex align-items-center justify-content-center rounded mb-2" style="width: 60px; height: 60px;">
+                            <i class="fa fa-users text-primary"></i>
+                        </div>
+                        <div class="ps-4">
+                            <h5 class="text-white mb-0">Mutlu Müşteriler</h5>
+                            <h1 class="text-white mb-0" data-toggle="counter-up">12345</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 wow zoomIn" data-wow-delay="0.3s">
+                    <div class="bg-light shadow d-flex align-items-center justify-content-center p-4" style="height: 150px;">
+                        <div class="bg-primary d-flex align-items-center justify-content-center rounded mb-2" style="width: 60px; height: 60px;">
+                            <i class="fa fa-check text-white"></i>
+                        </div>
+                        <div class="ps-4">
+                            <h5 class="text-primary mb-0">Teslim Edilen Ürünler</h5>
+                            <h1 class="mb-0" data-toggle="counter-up">1489</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 wow zoomIn" data-wow-delay="0.6s">
+                    <div class="bg-primary shadow d-flex align-items-center justify-content-center p-4" style="height: 150px;">
+                        <div class="bg-white d-flex align-items-center justify-content-center rounded mb-2" style="width: 60px; height: 60px;">
+                            <i class="fa fa-award text-primary"></i>
+                        </div>
+                        <div class="ps-4">
+                            <h5 class="text-white mb-0">Win Awards</h5>
+                            <h1 class="text-white mb-0" data-toggle="counter-up">12345</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Facts Start -->
+    <!-- About Start -->
+    <div id="hakkimizda" class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-7">
+                    <div class="section-title position-relative pb-3 mb-5">
+                        <h5 class="fw-bold text-primary text-uppercase">Hakkımızda</h5>
+                        <h1 class="mb-0">10 Yıllık Deneyimle En Kaliteli Baskı Çözümleri</h1>
+                    </div>
+                    @* Varsayılan Açıklama Kontrolü *@
+                    <p class="mb-4">
+                        @(Model.AboutUs != null && !string.IsNullOrEmpty(Model.AboutUs.AboutUsDescription)? Model.AboutUs.AboutUsDescription:
+                        "Biz, 10 yıldır sektördeki deneyimimizle en kaliteli baskı çözümleri sunuyoruz. Yüksek kaliteli hizmet, müşteri memnuniyeti ve yenilikçi çözümlerle her zaman yanınızdayız.")
+                    </p>
+
+                </div>
+                <div class="col-lg-5" style="min-height: 500px;">
+                    <div class="position-relative h-100">
+                        @* Varsayılan Resim Kontrolü *@
+                        <img class="position-absolute w-100 h-100 rounded wow zoomIn" data-wow-delay="0.9s"
+                             src="@(!string.IsNullOrEmpty(Model.AboutUs?.ImgUrl) ? Model.AboutUs.ImgUrl : "~/assets/img/testimonial-1.jpg")"
+                             alt="About Us Image" style="object-fit: cover;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- About End -->
+    <!-- References Start -->
+    <div id="referanslar" class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container py-5 mb-5">
+            <div class="bg-white">
+                <div class="owl-carousel vendor-carousel">
+                    @foreach (var referens in Model.References)
+                    {
+                        // Varsayılan resim URL'si ve başlık kontrolü
+                        var imageUrl = string.IsNullOrEmpty(referens.ImgUrl) ? "~/assets/img/testimonial-1.jpg" : referens.ImgUrl;
+                        var title = string.IsNullOrEmpty(referens.ReferemcesTitle) ? "Varsayılan Başlık" : referens.ReferemcesTitle;
+
+                        <img src="@imageUrl" alt="@title" class="img-fluid" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- References End -->
+    <!-- Services Start -->
+    <div id="hizmetlerimiz" class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
+                <h1 class="mb-0">Hizmetlerimiz</h1>
+            </div>
+            <div class="row g-5">
+                @foreach (var service in Model.Services)
+                {
+                    // Varsayılan Resim, Başlık ve Açıklama Kontrolü
+                    var imageUrl = string.IsNullOrEmpty(service.ImgUrl) ? "~/assets/img/testimonial-1.jpg" : service.ImgUrl;
+                    var title = string.IsNullOrEmpty(service.ServicesTitle) ? "Varsayılan Hizmet Başlığı" : service.ServicesTitle;
+                    var description = string.IsNullOrEmpty(service.ServicesDescription) ? "Bu hizmet hakkında daha fazla bilgi edinmek için bizimle iletişime geçebilirsiniz." : service.ServicesDescription;
+
+                    <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.3s">
+                        <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+                            <div class="service-icon">
+                                <img src="@imageUrl" alt="@title" class="img-fluid" />
+                            </div>
+                            <h4 class="mb-3">@title</h4>
+                            <p class="m-0">@description</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Services End -->
+    <!-- Gallery Start -->
+    <div id="galeri" class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="section-title text-center position-relative pb-3 mb-4 mx-auto" style="max-width: 600px;">
+                <h5 class="fw-bold text-primary text-uppercase">Galeri</h5>
+                <h1 class="display-4 mb-0">Fotoğraf Galerisi</h1>
+            </div>
+
+            <!-- Carousel Başlangıç -->
+            <div class="owl-carousel gallery-carousel wow fadeInUp" data-wow-delay="0.6s">
+                @foreach (var image in Model.Gallery)
+                {
+                    <div class="gallery-item bg-light my-4 p-2">
+                        @* Varsayılan Resim Kontrolü *@
+                        @if (!string.IsNullOrEmpty(image.ImgUrl))
+                        {
+                            <a href="@image.ImgUrl" data-lightbox="gallery">
+                                <img class="img-fluid rounded gallery-img" src="@image.ImgUrl" alt="Gallery Image" />
+                            </a>
+                        }
+                        else
+                        {
+                            @* Varsayılan Resim Göstermek *@
+                            <a href="/path/to/default.jpg" data-lightbox="gallery">
+                                <img class="img-fluid rounded gallery-img" src="~/assets/img/testimonial-1.jpg" alt="Default Gallery Image" />
+                            </a>
+                        }
+                    </div>
+                }
+            </div>
+            <!-- Carousel Bitiş -->
+
+        </div>
+    </div>
+    <!-- Gallery End -->
+    <!-- Owl Carousel CSS -->
+    <link href="~/assets/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <!-- Lightbox CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
+
+    <!-- Owl Carousel JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/assets/lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Lightbox JS -->
+    <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox.min.js"></script>
+
+    <script>
+        // Owl Carousel başlatma
+        $(document).ready(function () {
+            $(".gallery-carousel").owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: true,
+                dots: true,
+                responsive: {
+                    0: {
+                        items: 1,
+                    },
+                    600: {
+                        items: 3,
+                    },
+                    1000: {
+                        items: 4,
+                    }
+                }
+            });
+        });
+    </script>
+    <!-- Contact Start -->
+    <div id="iletisim" class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <!-- Left Section: Contact Information -->
+                <div class="col-lg-7">
+                    <!-- Section Title -->
+                    <div class="section-title position-relative pb-3 mb-5">
+                        <h5 class="fw-bold text-primary text-uppercase">İletişim</h5>
+                        <h1 class="mb-0">Bize Ulaşın</h1>
+                    </div>
+
+                    <!-- Contact Features -->
+                    <div class="row gx-3">
+                        <div class="col-sm-6 wow zoomIn" data-wow-delay="0.2s">
+                            <h5 class="mb-4"><i class="fa fa-reply text-primary me-3"></i>24 Saat İçinde Yanıt</h5>
+                        </div>
+                        <div class="col-sm-6 wow zoomIn" data-wow-delay="0.4s">
+                            <h5 class="mb-4"><i class="fa fa-phone-alt text-primary me-3"></i>7/24 Telefon Desteği</h5>
+                        </div>
+                    </div>
+
+                    <!-- Description Text -->
+                    <p class="mb-4">
+                        Her türlü soru ve talepleriniz için bizimle iletişime geçebilirsiniz. Size en kısa sürede dönüş yapmaktan mutluluk duyarız. Hizmetlerimiz hakkında detaylı bilgi almak için aşağıdaki iletişim bilgilerini kullanabilirsiniz.
+                    </p>
+
+                    <!-- Contact Number Section -->
+                    <div class="d-flex align-items-center mt-4 wow zoomIn" data-wow-delay="0.6s">
+                        <!-- Icon Container -->
+                        <div class="bg-primary d-flex align-items-center justify-content-center rounded" style="width: 60px; height: 60px;">
+                            <i class="fa fa-phone-alt text-white"></i> <!-- Phone Icon -->
+                        </div>
+                        <!-- Text Content -->
+                        <div class="ps-4">
+                            <h5 class="mb-2">Herhangi bir sorunuz için arayın</h5>
+                            <h4 class="text-primary mb-0">
+                                @(
+                                Model.Contact != null && !string.IsNullOrEmpty(Model.Contact.Phone)
+                                ? Model.Contact.Phone
+                                : "Telefon numarası mevcut değil"
+                            )
+                            </h4>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Section: Contact Details -->
+                <div class="col-lg-5">
+                    <div class="bg-primary rounded h-100 d-flex align-items-center justify-content-center p-5 wow zoomIn" data-wow-delay="0.9s">
+                        <div class="text-white">
+                            <h4 class="mb-4">İletişim Bilgileri</h4>
+                            <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Adres: @(Model.Contact != null && !string.IsNullOrEmpty(Model.Contact.Address) ? Model.Contact.Address : "Adres bilgisi mevcut değil")</p>
+                            <p class="mb-2"><i class="fa fa-envelope me-3"></i>Email: @(Model.Contact != null && !string.IsNullOrEmpty(Model.Contact.Email) ? Model.Contact.Email : "E-posta adresi mevcut değil")</p>
+                            <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>Telefon: @(Model.Contact != null && !string.IsNullOrEmpty(Model.Contact.Phone) ? Model.Contact.Phone : "Telefon numarası mevcut değil")</p>
+                            <p class="mb-0"><i class="fa fa-clock me-3"></i>Çalışma Saatleri: Pazartesi - Cuma, 09:00 - 18:00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Contact End -->
+    <!-- Footer Start -->
+
+    <div class="container-fluid bg-dark text-light mt-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row gx-5">
+
+                <div class="col-lg-4 col-md-6 footer-about mb-5">
+                    <h2 class="text-white mb-3"><i class="fa fa-boxes me-2"></i>2A Toptan Baskı Malzemeleri</h2>
+                    <p class="mb-4">Kaliteli ve geniş ürün yelpazesiyle toptan baskı malzemeleri alanında 10 yılı aşkın süredir hizmet vermekteyiz.</p>
+                    <form action="">
+                        <div class="input-group">
+                            <input type="email" class="form-control border-0 rounded-start" placeholder="E-posta Adresiniz" style="padding: 10px;">
+                            <button class="btn btn-primary rounded-end">Abone Ol</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-5">
+                    <h3 class="text-light mb-3">İletişim Bilgilerimiz</h3>
+                    <p class="d-flex align-items-center mb-2">
+                        <i class="bi bi-geo-alt text-primary me-3"></i>
+                        <span>@(Model.Contact != null && !string.IsNullOrEmpty(Model.Contact.Address) ? Model.Contact.Address : "Adres bilgisi mevcut değil")</span>
+                    </p>
+                    <p class="d-flex align-items-center mb-2">
+                        <i class="bi bi-envelope-open text-primary me-3"></i>
+                        <span>@(Model.Contact != null && !string.IsNullOrEmpty(Model.Contact.Email) ? Model.Contact.Email : "E-posta adresi mevcut değil")</span>
+                    </p>
+                    <p class="d-flex align-items-center mb-0">
+                        <i class="bi bi-telephone text-primary me-3"></i>
+                        <span>@(Model.Contact != null && !string.IsNullOrEmpty(Model.Contact.Phone) ? Model.Contact.Phone : "Telefon numarası mevcut değil")</span>
+                    </p>
+
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-5">
+                    <h3 class="text-light mb-3">Hızlı Linkler</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a class="text-light" href="#hakkimizda"><i class="bi bi-arrow-right-short text-primary me-2"></i>Hakkımızda</a></li>
+                        <li class="mb-2"><a class="text-light" href="#referanslar"><i class="bi bi-arrow-right-short text-primary me-2"></i>Referanslar</a></li>
+                        <li class="mb-2"><a class="text-light" href="#hizmetlerimiz"><i class="bi bi-arrow-right-short text-primary me-2"></i>Hizmetlerimiz</a></li>
+                        <li><a class="text-light" href="#galeri"><i class="bi bi-arrow-right-short text-primary me-2"></i>Galeri</a></li>
+                        <li class="mb-2"><a class="text-light" href="#iletisim"><i class="bi bi-arrow-right-short text-primary me-2"></i>İletişim</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer End -->
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/lib/wow/wow.min.js"></script>
+    <script src="~/assets/lib/easing/easing.min.js"></script>
+    <script src="~/assets/lib/waypoints/waypoints.min.js"></script>
+    <script src="~/assets/lib/counterup/counterup.min.js"></script>
+    <script src="~/assets/lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="~/assets/js/main.js"></script>
+</body>
+
+</html>

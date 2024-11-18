@@ -54,7 +54,7 @@
     <!-- Navbar & Carousel Start -->
     <div class="container-fluid position-relative p-0">
         <nav class="navbar navbar-expand-lg navbar-dark px-5 py-3 py-lg-0">
-            <a href="/" class="navbar-brand">
+            <a href="/" class="navbar-brand p-0">
                 <img src="~/assets/img/2ALogo.png" alt="2A Logo" style="height: 80px;">
             </a>
 
@@ -69,15 +69,10 @@
                     <a href="#galeri" class="nav-item nav-link">Galeri</a>
                     <a href="#iletisim" class="nav-item nav-link">İletişim</a>
                 </div>
+                <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal"></i></butaton>
+                <a href="https://www.ecopymarket.com/" class="btn btn-primary py-2 px-4 ms-3">Ecopy</a>
             </div>
-            <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal"></i></butaton>
-            <a href="https://www.ecopymarket.com/" class="btn btn-primary py-2 px-4 ms-3">Ecopy Market</a>
-            <butaton type="button" class="btn text-primary ms-3" data-bs-toggle="modal"></i></butaton>
-            <a href="@Url.Action("Index", "Login")" class="btn btn-primary py-2 px-4 ms-3">Giriş</a>
-    
         </nav>
-
-
 
         <div id="header-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
             <div class="carousel-inner">
@@ -407,6 +402,7 @@
                         <li class="mb-2"><a class="text-light" href="#hizmetlerimiz"><i class="bi bi-arrow-right-short text-primary me-2"></i>Hizmetlerimiz</a></li>
                         <li><a class="text-light" href="#galeri"><i class="bi bi-arrow-right-short text-primary me-2"></i>Galeri</a></li>
                         <li class="mb-2"><a class="text-light" href="#iletisim"><i class="bi bi-arrow-right-short text-primary me-2"></i>İletişim</a></li>
+                        <a href="@Url.Action("Index", "Login")" class="btn btn-primary py-2 px-4 ms-3">Giriş</a>
                     </ul>
                 </div>
             </div>

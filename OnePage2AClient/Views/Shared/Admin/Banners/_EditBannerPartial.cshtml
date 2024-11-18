@@ -11,12 +11,12 @@
 
         <div class="mb-3">
             <label for="Title" class="form-label">Başlık</label>
-            @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.Title, new { @class = "form-control", id = "Title" })
         </div>
 
         <div class="mb-3">
             <label for="Description" class="form-label">İçerik</label>
-            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = "4" })
+            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = "4", id = "Description" })
         </div>
 
         <div class="mb-3">

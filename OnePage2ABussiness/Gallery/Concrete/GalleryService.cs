@@ -16,7 +16,7 @@ public class GalleryService : IGalleryService
         _fileService = fileService;
     }
 
-    public async Task AddGalleryAsync(AddGalleryModel galleryModel, IFormFile[] imageFiles)
+    public async Task AddGalleryAsync(AddGalleryModel galleryModel, IFormFile[] imageFiles, string createdByName)
     {
         foreach (var imageFile in imageFiles)
         {
@@ -28,7 +28,7 @@ public class GalleryService : IGalleryService
             var galleryEntity = new Gallery
             {
                 ImgUrl = galleryModel.ImgUrl,
-                CreatedByName = galleryModel.CreatedByName,
+                CreatedByName = createdByName,
                 CreatedAt = galleryModel.CreatedAt,
                 IsActive = galleryModel.IsActive
             };

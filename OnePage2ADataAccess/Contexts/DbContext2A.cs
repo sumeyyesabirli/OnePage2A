@@ -10,10 +10,7 @@ namespace OnePage2ADataAccess.Contexts
         {
 
         }
-
-        //private readonly IHttpContextAccessor _httpContextAccessor;
-
-
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,7 +25,7 @@ namespace OnePage2ADataAccess.Contexts
         public DbSet<Banner> Banners { get; set; }
         public DbSet<AboutUs> AboutUs { get; set; }
 
-        /*public override int SaveChanges()
+        public override int SaveChanges()
         {
             var entries = ChangeTracker.Entries()
                 .Where(e => e.Entity is BaseEntity &&
@@ -51,6 +48,6 @@ namespace OnePage2ADataAccess.Contexts
             }
 
             return base.SaveChanges();
-        }*/
+        }
     }
 }

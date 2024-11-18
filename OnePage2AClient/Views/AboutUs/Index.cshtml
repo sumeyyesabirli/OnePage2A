@@ -43,30 +43,7 @@
                 }
             </tbody>
         </table>
-    </form>
-</div>
-
-<!-- Add New AboutUs -->
-<div class="container mt-5">
-    <h1 class="page-title">Yeni Hakkımızda Oluştur</h1>
-    <form action="@Url.Action("AddAboutUs", "AboutUs")" method="post" enctype="multipart/form-data">
-        @Html.AntiForgeryToken()
-
-        <div class="mb-3">
-            <label for="AboutUsDescription" class="form-label">Başlık</label>
-            <input type="text" id="AboutUsDescription" name="AboutUsDescription" class="form-control" required />
-        </div>
-
-        <div class="mb-3">
-            <label for="ImageFile" class="form-label">Fotoğraf Yükle</label>
-            <input type="file" name="ImageFile" id="ImageFile" class="form-control" />
-        </div>
-
-        <div class="mb-3">
-            <button type="submit" class="btn btn-primary">Ekle</button>
-            <a href="@Url.Action("Index", "Contact")" class="btn btn-secondary">İptal</a>
-        </div>
-    </form>
+    </form> 
     <nav>
         <ul class="pagination justify-content-center">
             @if (ViewBag.CurrentPage > 1)
@@ -91,6 +68,30 @@
             }
         </ul>
     </nav>
+</div>
+
+<!-- Add New AboutUs -->
+<div class="container mt-5">
+    <h1 class="page-title">Yeni Hakkımızda Oluştur</h1>
+    <form action="@Url.Action("AddAboutUs", "AboutUs")" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label for="AboutUsDescription" class="form-label">Başlık</label>
+            <input type="text" id="AboutUsDescription" name="AboutUsDescription" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="ImageFile" class="form-label">Fotoğraf Yükle</label>
+            <input type="file" name="ImageFile" id="ImageFile" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Ekle</button>
+            <a href="@Url.Action("Index", "Contact")" class="btn btn-secondary">İptal</a>
+        </div>
+    </form>
+
 </div>
 
 <!-- Edit AboutUs Modal -->

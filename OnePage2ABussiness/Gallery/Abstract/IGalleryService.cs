@@ -5,7 +5,7 @@ namespace OnePage2ABussiness.Gallery.Abstract
 {
     public interface IGalleryService
     {
-        Task AddGalleryAsync(AddGalleryModel galleryModel, IFormFile[] imageFiles);
+        Task AddGalleryAsync(AddGalleryModel galleryModel, IFormFile[] imageFiles, string createdByName);
         Task EditGalleryAsync(UpdateGalleryModel galleryModel, IFormFile imageFile);
         Task SetActiveGalleryAsync(int selectedGalleryId);
     }

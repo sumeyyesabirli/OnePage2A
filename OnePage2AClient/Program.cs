@@ -28,8 +28,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 builder.Services.AddControllersWithViews();
 
-// HttpContextAccessor
-//builder.Services.AddHttpContextAccessor();
+//HttpContextAccessor
+builder.Services.AddHttpContextAccessor();
 
 // Configure DbContext
 builder.Services.AddDbContext<DbContext2A>(options =>

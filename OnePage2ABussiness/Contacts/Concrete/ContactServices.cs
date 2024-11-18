@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using OnePage2ABussiness.Contacts.Abstract;
+﻿using OnePage2ABussiness.Contacts.Abstract;
 using OnePage2ABussiness.Contacts.Models;
-using OnePage2ACore.Abstract;
 using OnePage2ADataAccess.Repositories.Abstract;
 using OnePage2AEntity.Entites;
 
@@ -40,6 +38,7 @@ namespace OnePage2ABussiness.Contacts.Concrete
             }
 
             existingContact.Email = bannerModel.Email ?? existingContact.Email;
+            existingContact.Address = bannerModel.Address ?? existingContact.Address;
             existingContact.Phone = bannerModel.Phone ?? existingContact.Phone;
             existingContact.Email = bannerModel.Email ?? existingContact.Email;
             existingContact.IsActive = bannerModel.IsActive;

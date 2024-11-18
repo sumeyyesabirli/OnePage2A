@@ -151,9 +151,8 @@
             $(document).on('submit', '#editBannerForm', function (e) {
                 e.preventDefault();
                 var formData = new FormData(this);
-
                 $.ajax({
-                    url: '@Url.Action("EditBanner", "Banners")',
+                    url: $(this).attr('action'),
                     type: 'POST',
                     data: formData,
                     contentType: false,
@@ -164,8 +163,12 @@
                         location.reload();
                     },
                     error: function (xhr) {
-                        alert('Bir hata oluştu.');
-                        console.log(xhr);
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            alert('Hata: ' + xhr.responseJSON.errors.join(", "));
+                        } else {
+                            alert('Güncelleme sırasında bir hata oluştu.');
+                            console.error(xhr.responseText);
+                        }
                     }
                 });
             });

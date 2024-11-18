@@ -24,11 +24,6 @@ namespace OnePage2AClient.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(AddRegisterModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
             try
             {
                 var createdByName = User.Identity.Name;
