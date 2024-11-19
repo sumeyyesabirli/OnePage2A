@@ -34,7 +34,6 @@ public class BannerService : IBannerService
 
         await _repository.AddAsync(bannerEntity);
     }
-
     public async Task UpdateBannerAsync(UpdateBannerModel bannerModel, IFormFile imageFile)
     {
         var existingBanner = await _repository.GetByIdAsync(bannerModel.Id);
@@ -43,10 +42,14 @@ public class BannerService : IBannerService
             throw new Exception("Banner not found");
         }
 
-        existingBanner.Title = bannerModel.Title ?? existingBanner.Title;
-        existingBanner.Description = bannerModel.Description ?? existingBanner.Description;
+        // Title ve Description null veya boş ise, alanları sıfırla
+        existingBanner.Title = string.IsNullOrEmpty(bannerModel.Title) ? null : bannerModel.Title;
+        existingBanner.Description = string.IsNullOrEmpty(bannerModel.Description) ? null : bannerModel.Description;
+
+        // IsActive her durumda güncellenebilir
         existingBanner.IsActive = bannerModel.IsActive;
 
+        // Eğer yeni bir resim dosyası gelmişse, önceki resmi sil ve yeni resmi kaydet
         if (imageFile != null)
         {
             if (!string.IsNullOrEmpty(existingBanner.ImgUrl))
@@ -57,8 +60,11 @@ public class BannerService : IBannerService
             existingBanner.ImgUrl = await _fileService.SaveFileAsync(imageFile, "images/banners");
         }
 
+        // Banner'ı güncelle
         await _repository.UpdateAsync(existingBanner);
     }
+
+
 
     public async Task SetActiveBannerAsync(int selectedBannerId)
     {
